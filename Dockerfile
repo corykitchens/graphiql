@@ -1,5 +1,4 @@
 FROM node:14.15.4-alpine
-MAINTAINER Niek Palm <dev.npalm@gmail.com>
 
 WORKDIR /app
 
