@@ -1,20 +1,28 @@
+const express = require("express");
+const { ApolloServer, gql } = require("apollo-server-express");
 
-import express from 'express';
-import {
-  graphiqlExpress,
-} from 'graphql-server-express';
-import bodyParser from 'body-parser';
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
+  type Query {
+    hello: String
+  }
+`;
 
-const PORT = 4000;
-const server = express();
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    hello: () => "Hello world!",
+  },
+};
 
+const server = new ApolloServer({ typeDefs, resolvers });
 
+const app = express();
+server.applyMiddleware({
+  app,
+  path: process.env.API_ENDPOINT || "/graphiql",
+});
 
-server.use('/', graphiqlExpress({
-  endpointURL: process.env.API_URL
-}));
-
-
-server.listen(PORT, () =>
-  console.log(`GraphiQL is now running on http://localhost:${PORT}`)
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
 );
